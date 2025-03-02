@@ -33,36 +33,36 @@ public class Main {
         bw.write(String.valueOf(MaxArea));
         bw.flush();
     }
-    private static void bfs() {
-        int[][] tempMap = new int[N+1][M+1];
-        for (int i = 0; i <= N; i++) {
-            tempMap[i] = arr[i].clone();
-        } 
-        Queue<int[]> queue = new LinkedList<>(virus);
-        while(!queue.isEmpty()) {
-            int[] current = queue.poll();
-            for (int i = 0; i < 4; i++) {
-                int nx = current[0] + dx[i];
-                int ny = current[1] + dy[i];
-                if (nx > 0 && ny > 0 && nx <= N && ny <= M && tempMap[nx][ny] == 0) {
+    private static void dfs(int x, int y, int[][] tempMap) {
+        for (int i = 0; i < 4; i++) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+            if (nx > 0 && ny > 0 && nx <= N && ny <= M) {
+                if (tempMap[nx][ny] == 0) {
                     tempMap[nx][ny] = 2;
-                    queue.offer(new int[] {nx, ny});
-                } 
-            } 
-        }
-        int safeArea = 0;
-        for (int i = 1; i <= N; i++) {
-            for (int j = 1; j <= M; j++) {
-                if (tempMap[i][j] == 0) {
-                    safeArea++;
-                } 
+                    dfs(nx, ny, tempMap);
+                }
             } 
         } 
-        MaxArea = Math.max(MaxArea, safeArea);
     }
     private static void combination(int start, int count) {
         if (count == 3) {
-            bfs();
+            int[][] tempMap = new int[N+1][M+1];
+            for (int i = 0; i <= N; i++) {
+                tempMap[i] = arr[i].clone();
+            } 
+            for (int[] i : virus) {
+                dfs(i[0], i[1], tempMap);
+            } 
+            int safeArea = 0;
+            for (int i = 1; i <= N; i++) {
+                for (int j = 1; j <= M; j++) {
+                    if (tempMap[i][j] == 0) {
+                        safeArea++;
+                    } 
+                } 
+            } 
+            MaxArea = Math.max(safeArea, MaxArea);
             return;
         } 
         for (int i = start; i < zero.size(); i++) {
