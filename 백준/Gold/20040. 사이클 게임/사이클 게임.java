@@ -4,6 +4,7 @@ import java.util.stream.IntStream;
 
 public class Main {
     static int[] parent;
+    static int[] rank;
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
@@ -12,38 +13,43 @@ public class Main {
 		int N = Integer.parseInt(st.nextToken());
 		int M = Integer.parseInt(st.nextToken());
 		parent = new int[N];
-		IntStream.range(0, N).forEach(i -> parent[i] = i);
+		rank = new int[N];
+		IntStream.range(0, N).forEach(i -> {
+		    parent[i] = i;
+		    rank[i] = 0;
+		});
 		int answer = 0;
 		
 		for (int i = 0; i < M; i++) {
 		    st = new StringTokenizer(br.readLine());
 		    int s = Integer.parseInt(st.nextToken());
 		    int e = Integer.parseInt(st.nextToken());
-		    if (!isSameParent(s, e)) {
-		        union(s, e);
+		    if (!unionByRank(s, e)) {
+		        continue;
 		    } else {
 		        answer = i + 1;
 		        break;
 		    }
-		    answer = 0;
 		} 
 		bw.write(String.valueOf(answer));
 		bw.flush();
 	}
 	
-	private static boolean isSameParent(int x, int y) {
-	    x = find(x);
-	    y = find(y);
-	    if (x == y) return true;
-	    return false;
-	}
-	
-	private static void union(int x, int y) {
+	private static boolean unionByRank(int x, int y) {
 	    x = find(x);
 	    y = find(y);
 	    if (x != y) {
-	        parent[y] = x;
+	        if (rank[x] > rank[y]) {
+	            parent[y] = x;
+	        } else if(rank[y] > rank[x]) {
+	            parent[x] = y;
+	        } else {
+	            parent[y] = x;
+	            rank[x]++;
+	        }
+	        return false;
 	    }
+	    return true;
 	}
 	
 	private static int find(int x) {
