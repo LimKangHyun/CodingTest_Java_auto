@@ -23,7 +23,6 @@ public class Main {
 		        list.add(i);
 		    }
 		} 
-		// 마지막 조건이 isPrime[N]이 true이면 +1해서 출력
 		int[] arr = list.stream().mapToInt(i -> i).toArray();
 		int answer = CountSubSum(N, arr);
 		bw.write(String.valueOf(answer));
