@@ -1,56 +1,59 @@
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Stack;
+import java.util.StringTokenizer;
  
-class Main {
-    static int stoi(String s) {
-        return Integer.parseInt(s);
-    }
- 
-    static long[] pick = new long[3];
-    static long max = 3000000000L;
- 
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
- 
-        int n = stoi(br.readLine());
-        long[] arr = new long[n];
- 
-        st = new StringTokenizer(br.readLine());
-        for(int i=0; i<n; i++)
-            arr[i] = Long.parseLong(st.nextToken());
- 
-        Arrays.sort(arr);
- 
-        for(int i=0; i<n-2; i++) 
-            solution(arr, i);
- 
-        Arrays.sort(pick);
-        
-        for(int i=0; i<3; i++)
-            System.out.print(pick[i] + " ");
-    }
- 
-    static void solution(long[] arr, int index) {
-        int left = index+1;
-        int right = arr.length-1;
- 
-        while(left < right) {
- 
-            long sum = arr[left] + arr[right] + arr[index];
-            long absSum = Math.abs(sum);
- 
-            if(absSum < max) {
-                pick[0] = arr[left];
-                pick[1] = arr[right];
-                pick[2] = arr[index];
-                max = absSum;
-            }
- 
-            if(sum > 0)
-                right--;
-            else
-                left++;
-        }
-    }
+public class Main {
+	
+	public static int N, M;
+	public static long[] arr;
+	public static long answer = 3000000001L;
+	public static long[] answerArr = new long[3];
+	public static StringBuilder sb = new StringBuilder();
+	public static void main(String[] args) throws IOException{
+    	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    	StringTokenizer st = new StringTokenizer(br.readLine());
+    	N = Integer.parseInt(st.nextToken());
+    	arr = new long[N];
+    	st = new StringTokenizer(br.readLine());
+    	for(int i=0;i<N;i++) {
+    		arr[i] = Integer.parseInt(st.nextToken());
+    	}
+    	Arrays.sort(arr);
+    	
+    	for(int i=0;i<N-2;i++) { //3가지 용액을 더하기에 1가지 용액을 확정적으로 더하면 2가지 용액을 고려하여 N-2번까지 돌린다.
+    		twoPointer(i);
+    	}
+    	
+    	Arrays.sort(answerArr);
+    	System.out.println(answerArr[0]+" "+answerArr[1]+" "+answerArr[2]);
+	}
+	
+	public static void twoPointer(int fixedIdx) {
+		int start = fixedIdx + 1; //확정적으로 더할 용액보다 한개 더 큰 곳에서 시작한다.
+		int end = N - 1; //마지막 용액에서 시작한다.
+		
+		while(start < end) {
+			long value = arr[start] + arr[end] + arr[fixedIdx];
+			long absValue = Math.abs(value);
+			
+			if(answer > absValue) {
+				answer = absValue;
+				answerArr[0] = arr[fixedIdx];
+				answerArr[1]= arr[start];
+				answerArr[2] = arr[end];
+			}
+			
+			if(value <= 0) {
+				start += 1;
+			}else if(value > 0) {
+				end -= 1;
+			}
+			
+		}
+	}
+	
 }
