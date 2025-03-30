@@ -9,47 +9,47 @@ public class Main {
         while (true) {
             StringTokenizer st = new StringTokenizer(br.readLine());
             int N = Integer.parseInt(st.nextToken());
-            if (N == 0) break;
+            if (N == 0) break; // 입력 종료 조건
 
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
 
-            // 🔥 싸이클 탐색을 위한 토끼와 거북이 알고리즘 적용
+            // Floyd's Cycle Detection Algorithm
             int slow = 0, fast = 0;
 
-            // 1. 싸이클이 발생하는 지점 찾기
-            while (true) {
-                slow = f(slow, a, b, N);       // 거북이 한 칸 이동
-                fast = f(f(fast, a, b, N), a, b, N); // 토끼 두 칸 이동
-
-                if (slow == fast) break; // 싸이클 발견하면 중단
-            }
-
-            // 2. 싸이클 길이 구하기
-            int cycleStart = slow;
-            int cycleLength = 0;
+            // 1. Find the meeting point inside the cycle
             do {
-                cycleLength++;
-                slow = f(slow, a, b, N);
-            } while (slow != cycleStart);
+                slow = nextValue(slow, a, b, N);
+                fast = nextValue(nextValue(fast, a, b, N), a, b, N);
+            } while (slow != fast);
 
-            // 3. 싸이클이 발생하기 전에 방문한 사람 카운트
+            // 2. Find the start of the cycle
+            int cycleStart = 0;
             slow = 0;
-            int beforeCycle = 0;
-            while (slow != cycleStart) {
-                beforeCycle++;
-                slow = f(slow, a, b, N);
+            while (slow != fast) {
+                slow = nextValue(slow, a, b, N);
+                fast = nextValue(fast, a, b, N);
+                cycleStart++;
             }
 
-            // 결과 출력
+            // 3. Calculate the length of the cycle
+            int cycleLength = 1;
+            fast = nextValue(slow, a, b, N);
+            while (slow != fast) {
+                fast = nextValue(fast, a, b, N);
+                cycleLength++;
+            }
+
+            // 술을 마시지 않은 사람의 수는 전체 인원 - 사이클 내부 사람 수
             bw.write(String.valueOf(N - cycleLength));
             bw.newLine();
         }
+
         bw.flush();
     }
 
-    // 🎯 x = (a * x^2 + b) % N 계산 함수 (안전한 모듈러 연산 적용)
-    private static int f(int x, int a, int b, int N) {
+    // f(x) 계산 공식
+    private static int nextValue(int x, int a, int b, int N) {
         return (int) (((1L * a * x % N) * x % N + b) % N);
     }
 }
