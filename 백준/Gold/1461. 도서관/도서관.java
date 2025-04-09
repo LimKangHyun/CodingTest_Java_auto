@@ -27,11 +27,13 @@ public class Main {
 		neg.sort(Comparator.reverseOrder());
 		int answer = findMin();
 		int maxDist = 0;
-		if (!pos.isEmpty() && (neg.isEmpty() || pos.get(0) >= neg.get(0))) {
-            maxDist = pos.get(0);
-        } else if (!neg.isEmpty()) {
-            maxDist = neg.get(0);
-        }
+		if (!pos.isEmpty()) maxDist = pos.get(0);
+		if (!neg.isEmpty()) maxDist = Math.max(maxDist, neg.get(0));
+// 		if (!pos.isEmpty() && (neg.isEmpty() || pos.get(0) >= neg.get(0))) {
+//             maxDist = pos.get(0);
+//         } else if (!neg.isEmpty()) {
+//             maxDist = neg.get(0);
+//         }
         bw.write(String.valueOf(answer - maxDist));
 		bw.flush();
 	}
@@ -39,16 +41,10 @@ public class Main {
 	    int result = 0;
 	    int size = M;
 	    for (int i = 0; i < pos.size(); i+=size) {
-	        int end = Math.min(i+size, pos.size());
-	        List<Integer> pTemp = pos.subList(i, end);
-	        int max = Collections.max(pTemp);
-	        result += max * 2;
+	        result += pos.get(i) * 2;
 	    } 
 	    for (int i = 0; i < neg.size(); i+=size) {
-	        int end = Math.min(i+size, neg.size());
-	        List<Integer> nTemp = neg.subList(i, end);
-	        int max = Collections.max(nTemp);
-            result += max * 2;
+	        result += neg.get(i) * 2;
 	    } 
 	    return result;
 	}
