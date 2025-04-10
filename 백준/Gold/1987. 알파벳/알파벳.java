@@ -18,10 +18,10 @@ public class Main {
 		for (int i = 0; i < R; i++) {
 		    String input = br.readLine();
 		    for (int j = 0; j < C; j++) {
-		        map[i][j] = input.charAt(j);
+		        map[i][j] = input.charAt(j) - 'A';
 		    } 
 		} 
-		alpha[map[0][0] - 'A'] = true;
+		alpha[map[0][0]] = true;
 		dfs(map, 0, 0, 1);
 		bw.write(String.valueOf(maxDepth));
 		bw.flush();
@@ -32,10 +32,10 @@ public class Main {
 	        int nx = x + dx[i];
 	        int ny = y + dy[i];
 	        if (nx >= 0 && ny >= 0 && nx < R && ny < C) {
-	            if (!alpha[map[nx][ny] - 'A']) {
-	                alpha[map[nx][ny] - 'A'] = true;
+	            if (!alpha[map[nx][ny]]) {
+	                alpha[map[nx][ny]] = true;
 	                dfs(map, nx, ny, depth+1);
-	                alpha[map[nx][ny] - 'A'] = false;
+	                alpha[map[nx][ny]] = false;
 	            }
 	        } 
 	    } 
