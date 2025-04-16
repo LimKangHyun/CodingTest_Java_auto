@@ -14,10 +14,7 @@ class Solution {
         dist = new int[n][m];
         bfs(maps, n, m);
         answer = dist[n-1][m-1];
-        if(answer == 0) {
-            return -1;
-        }
-        return answer;
+        return answer == 0 ? -1 : answer;
     }
     
     private static void bfs(int[][] maps, int n, int m) {
