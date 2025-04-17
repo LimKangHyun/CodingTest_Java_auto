@@ -21,25 +21,19 @@ public class Main {
 	    PriorityQueue<Integer> pq1 = new PriorityQueue<>(Comparator.reverseOrder());
 	    PriorityQueue<Integer> pq2 = new PriorityQueue<>();
 	    
-	    int mid = 0;
 	    for (int i = 0; i < arr.length; i++) {
-	        if (i % 2 == 0) pq1.offer(arr[i]);
-	        else pq2.offer(arr[i]);
-	        
-	        if (pq2.isEmpty()) {
-	            mid = pq1.peek();
+	        if (pq1.isEmpty() || arr[i] <= pq1.peek()) {
+	            pq1.offer(arr[i]);
 	        } else {
-	            if (pq1.peek() > pq2.peek()) {
-	                int temp1 = pq1.poll();
-	                int temp2 = pq2.poll();
-	                pq1.offer(temp2);
-	                pq2.offer(temp1);
-	                mid = pq1.peek();
-	            } else {
-	                mid = pq1.peek();
-	            }
+	            pq2.offer(arr[i]);
 	        }
-	        sb.append(mid + "\n");
+	        
+	        if (pq1.size() > pq2.size() + 1) {
+	            pq2.offer(pq1.poll());
+	        } else if (pq1.size() < pq2.size()){
+	            pq1.offer(pq2.poll());
+	        }
+	        sb.append(pq1.peek() + "\n");
 	    } 
 	}
 }
