@@ -2,29 +2,6 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static class TrieNode {
-        Map<Character, TrieNode> children = new HashMap<>();
-        boolean isEnd = false;
-    }
-    
-    static class Trie {
-        TrieNode root = new TrieNode();
-        
-        public boolean insert(String number) {
-            TrieNode node = root;
-            for (char c : number.toCharArray()) {
-                if (!node.children.containsKey(c)) {
-                    node.children.put(c, new TrieNode());
-                } 
-                node = node.children.get(c);
-                if (node.isEnd) {
-                    return false;
-                } 
-            } 
-            node.isEnd = true;
-            return true;
-        }
-    }
 	public static void main(String[] args) throws IOException {
 	    StringBuilder sb = new StringBuilder();
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -39,10 +16,9 @@ public class Main {
 		    } 
 		    Arrays.sort(numbers);
 		    
-		    Trie trie = new Trie();
 		    boolean isConsistent = true;
-		    for (String num : numbers) {
-		        if(!trie.insert(num)) {
+		    for (int i = 0; i < n - 1; i++) {
+		        if (numbers[i+1].startsWith(numbers[i])) {
 		            isConsistent = false;
 		            break;
 		        }
