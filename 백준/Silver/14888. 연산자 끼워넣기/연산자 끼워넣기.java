@@ -36,18 +36,15 @@ public class Main {
 	    for (int i = 0; i < 4; i++) {
 	        if (arithmetic[i] > 0) {
 	            arithmetic[i]--;
-	            if (i == 0) {
-	                dfs(num, result + num[depth], depth+1);
-	            } else if (i == 1) {
-	                dfs(num, result - num[depth], depth+1);
-	            } else if (i == 2) {
-	                dfs(num, result * num[depth], depth+1);
-	            } else if (i == 3) {
-	                if (result < 0) {
-	                    dfs(num, -(-result / num[depth]), depth+1);
-	                } else {
-	                    dfs(num, result / num[depth], depth+1);
-	                }
+	            switch(i) {
+	                case 0: dfs(num, result + num[depth], depth + 1);
+	                    break;
+	                case 1: dfs(num, result - num[depth], depth + 1);
+	                    break;
+	                case 2: dfs(num, result * num[depth], depth + 1);
+	                    break;
+	                case 3: dfs(num, result / num[depth], depth + 1);
+	                    break;
 	            }
 	            arithmetic[i]++; // 같은 depth의 다음 연산자 사용을 위해
 	        }
