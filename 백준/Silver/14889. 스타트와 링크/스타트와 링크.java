@@ -42,12 +42,11 @@ public class Main {
 	    int link = 0;
 	    for (int i = 0; i < N - 1; i++) {
 	        for (int j = i + 1; j < N; j++) {
-	            if (visit[i] && visit[j]) {
-	                start += synergy[i][j] + synergy[j][i];
+	            if (visit[i] == visit[j]) {
+	                int sum = synergy[i][j] + synergy[j][i];
+	                if (visit[i]) start += sum;
+	                else link += sum;
 	            } 
-	            else if(!visit[i] && !visit[j]) {
-	                link += synergy[i][j] + synergy[j][i];
-	            }
 	        } 
 	    } 
 	    return Math.abs(start - link);
