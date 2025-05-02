@@ -12,13 +12,18 @@ public class Main {
     }
     private static int N, M;
     private static int[][] arr;
-    private static int[][] copyArr;
     private static int[] dx = {0, 1, 0, -1}; // 상 우 하 좌
     private static int[] dy = {-1, 0, 1, 0};
-    private static List<CCTV> list = new ArrayList<>();
-    private static int[] cctvArr;
+    private static List<CCTV> cctvList = new ArrayList<>();
     private static int min = Integer.MAX_VALUE;
-    
+    private static int[][][] direction = {
+        {},
+        {{0}, {1}, {2}, {3}},
+        {{0, 2}, {1, 3}},
+        {{0, 1}, {1, 2}, {2, 3}, {3, 0}},
+        {{0, 1, 2}, {1, 2, 3}, {2, 3, 0}, {3, 0, 1}},
+        {{0, 1, 2, 3}},
+    };
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
@@ -31,106 +36,51 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < M; j++) {
                 arr[i][j] = Integer.parseInt(st.nextToken());
-                if (arr[i][j] != 0 && arr[i][j] != 6) list.add(new CCTV(i, j, arr[i][j]));
+                if (arr[i][j] != 0 && arr[i][j] != 6) cctvList.add(new CCTV(i, j, arr[i][j]));
             } 
         }
-        cctvArr = new int[list.size()];
-        combination(0, list.size());
+        dfs(0, arr);
         bw.write(String.valueOf(min));
         bw.flush();
     }
-    private static void combination(int depth, int totalCCTV) {
-        if (depth == totalCCTV) {
-            copyArr = new int[N][M];
-            for (int i = 0; i < arr.length; i++) {
+    private static void dfs(int depth, int[][] arr) {
+        if (depth == cctvList.size()) {
+            int blindSpotCount = findBlindSpot(arr);
+            min = Math.min(min, blindSpotCount);
+            return;
+        }
+        CCTV cctv = cctvList.get(depth);
+        int type = cctv.num;
+        
+        for (int[] dirs : direction[type]) {
+            int[][] copyArr = new int[N][M];
+            for (int i = 0; i < N; i++) {
                 copyArr[i] = arr[i].clone();
             } 
-            for (int i = 0; i < list.size(); i++) {
-                direction(list.get(i), cctvArr[i]);
-            } 
-            findMinBlindSpot();
-            return;
-        } 
-        for (int i = 0; i < 4; i++) {
-            cctvArr[depth] = i;
-            combination(depth+1, totalCCTV);
+            for (int dir : dirs) {
+                isWatched(copyArr, cctv.x, cctv.y, dir);
+            }
+            dfs(depth+1, copyArr);
         } 
     }
-    private static void direction(CCTV cctv, int d) {
-        int cctvNum = cctv.num;
-        if (cctvNum == 1) {
-            if (d == 0) isWatched(cctv, 0);
-            else if (d == 1) isWatched(cctv, 1);
-            else if (d == 2) isWatched(cctv, 2);
-            else if (d == 3) isWatched(cctv, 3);
-        } else if (cctvNum == 2) {
-            if (d == 0 || d == 2) {
-                isWatched(cctv, 0);
-                isWatched(cctv, 2);
-            } else {
-                isWatched(cctv, 1);
-                isWatched(cctv, 3);
-            }
-        } else if (cctvNum == 3) {
-            if (d == 0) {
-                isWatched(cctv, 0);
-                isWatched(cctv, 1);
-            } else if (d == 1) {
-                isWatched(cctv, 1);
-                isWatched(cctv, 2);
-            } else if (d == 2) {
-                isWatched(cctv, 2);
-                isWatched(cctv, 3);
-            } else if (d == 3) {
-                isWatched(cctv, 3);
-                isWatched(cctv, 0);
-            }
-        } else if (cctvNum == 4) {
-            if (d == 0) {
-                isWatched(cctv, 3);
-                isWatched(cctv, 0);
-                isWatched(cctv, 1);
-            } else if (d == 1) {
-                isWatched(cctv, 0);
-                isWatched(cctv, 1);
-                isWatched(cctv, 2);
-            } else if (d == 2) {
-                isWatched(cctv, 1);
-                isWatched(cctv, 2);
-                isWatched(cctv, 3);
-            } else if (d == 3) {
-                isWatched(cctv, 2);
-                isWatched(cctv, 3);
-                isWatched(cctv, 0);
-            }
-        } else if (cctvNum == 5) {
-            isWatched(cctv, 0);
-            isWatched(cctv, 1);
-            isWatched(cctv, 2);
-            isWatched(cctv, 3);
-        }
-    }
-    private static void findMinBlindSpot() {
-        int count = 0;
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                if (copyArr[i][j] == 0) count++; 
-            } 
-        } 
-        min = Math.min(min, count);
-    }
-    private static void isWatched(CCTV cctv, int d) {
-        int nx = cctv.x;
-        int ny = cctv.y;
-        while(true) {
-            nx += dx[d];
-            ny += dy[d];
-            if (nx < 0 || ny < 0 || nx >= N || ny >= M || copyArr[nx][ny] == 6) {
-                break;
-            } 
+    private static void isWatched(int[][] copyArr, int x, int y, int dir) {
+        int nx = x + dx[dir];
+        int ny = y + dy[dir];
+        while(nx >= 0 && ny >= 0 && nx < N && ny < M && copyArr[nx][ny] != 6) {
             if (copyArr[nx][ny] == 0) {
                 copyArr[nx][ny] = -1;
             }
+            nx += dx[dir];
+            ny += dy[dir];
         }
+    }
+    private static int findBlindSpot(int[][] arr) {
+        int count = 0;
+        for (int[] row : arr) {
+            for (int value : row) {
+                if (value == 0) count++; 
+            } 
+        } 
+        return count;
     }
 }
