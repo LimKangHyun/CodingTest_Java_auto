@@ -7,7 +7,7 @@ class Solution {
     public String[] solution(String[][] tickets) {
         answer = new String[tickets.length + 1];
         visit = new boolean[tickets.length + 1];
-        //tickets 정렬(맨 처음 큐에 들어갈 원소를 찾아야 하므로)
+        //tickets 정렬(맨 처음 재귀에 들어갈 원소를 찾아야 하므로)
         Arrays.sort(tickets, (a, b) -> {
             if (a[0].equals("ICN")) return -1; // 반환값이 음수이면 a, b 유지
             if (b[0].equals("ICN")) return 1; // 반환값이 양수이면 b, a로 변환
