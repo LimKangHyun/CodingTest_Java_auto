@@ -11,7 +11,7 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         K = Integer.parseInt(st.nextToken());
-        belt = new LinkedList<>();
+        belt = new ArrayList<>();
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N * 2; i++) {
             belt.add(new int[] {Integer.parseInt(st.nextToken()), 0});
@@ -31,7 +31,7 @@ public class Main {
                 }
             } 
             if (belt.get(N-1)[1] == 1) belt.get(N-1)[1] = 0; 
-            if (belt.get(0)[1] == 0 && belt.get(0)[0] > 0) {
+            if (belt.get(0)[1] == 0 && belt.get(0)[0] >= 1) {
                 belt.get(0)[1]++;
                 belt.get(0)[0]--;
                 if (belt.get(0)[0] == 0) zeroCount++; 
