@@ -51,19 +51,10 @@ class Solution {
             for(int i = 0; i < 4; i++) {
                 int nx = cx + dx[i];
                 int ny = cy + dy[i];
-                if(nx > 0 && ny > 0 && nx <= maxY && ny <= maxX) {
-                    if(!visit[nx][ny]) {
-                        if (map[cx][cy] == 1) {
-                            if(map[nx][ny] == 1 || map[nx][ny] == 2) {
-                                visit[nx][ny] = true;
-                                queue.offer(new int[] {nx, ny, dist+1});
-                            }
-                        } else if (map[cx][cy] == 2) {
-                            if(map[nx][ny] == 1) {
-                                visit[nx][ny] = true;
-                                queue.offer(new int[] {nx, ny, dist+1});
-                            }
-                        }
+                if (nx >= 0 && ny >= 0 && nx <= maxY && ny <= maxX) {
+                    if (!visit[nx][ny] && map[nx][ny] == 1) {
+                        visit[nx][ny] = true;
+                        queue.offer(new int[] {nx, ny, dist+1});   
                     }
                 }
             }
