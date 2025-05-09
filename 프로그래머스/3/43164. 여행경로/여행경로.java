@@ -7,11 +7,12 @@ class Solution {
     public String[] solution(String[][] tickets) {
         answer = new String[tickets.length + 1];
         visit = new boolean[tickets.length];
-        //tickets 정렬(맨 처음 재귀에 들어갈 원소를 찾아야 하므로)
+        //tickets 정렬(알파벳순으로 0번째, 1번째 순위로 정렬해도 ICN에 대한 알파벳 정렬은 정상적으로 이루어짐)
         Arrays.sort(tickets, (a, b) -> {
-            if (a[0].equals("ICN")) return -1; // 반환값이 음수이면 a, b 유지
-            if (b[0].equals("ICN")) return 1; // 반환값이 양수이면 b, a로 변환
-            return a[1].compareTo(b[1]); // 둘다 아니면 2번째 원소로 비교
+            if (a[0].equals(b[0])) {
+                return a[1].compareTo(b[1]); // 둘다 아니면 2번째 원소로 비교
+            }
+            return a[0].compareTo(b[0]);            
         });
         System.out.println(Arrays.deepToString(tickets));
         dfs("ICN", "ICN", tickets, 0);
