@@ -10,9 +10,9 @@ public class Main {
 		int t = Integer.parseInt(br.readLine());
 		while(t-- > 0) {
 		    String[] input = br.readLine().split(" ");
-		    for (int i = 0; i < input.length; i++) {
-		        for (int j = input[i].length() - 1; j >= 0; j--) {
-		            sb.append(input[i].charAt(j));
+		    for (String word : input) {
+		        for (int j = word.length() - 1; j >= 0; j--) {
+		            sb.append(word.charAt(j));
 		        } 
 		        sb.append(" ");
 		    } 
