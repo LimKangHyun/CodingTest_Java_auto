@@ -10,8 +10,10 @@ public class Main {
 		int t = Integer.parseInt(br.readLine());
 		while(t-- > 0) {
             result = 0;
+		    String input = br.readLine();
 		    int count = 0;
-		    for (byte spell : br.readLine().getBytes()) {
+		    for (int i = 0; i < input.length(); i++) {
+	            char spell = input.charAt(i);
 		        if (spell == 'O') {
 		            count+=1;
 		            result += count;
