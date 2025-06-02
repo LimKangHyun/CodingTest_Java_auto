@@ -10,17 +10,22 @@ public class Main {
 		int m = Integer.parseInt(br.readLine());
 		String input = br.readLine();
 		
-		for (int i = 0; i < n; i++) {
-		    sb.append("IO");
-		} 
-		sb.append("I");
-		
-		String st = sb.toString();
 		int count = 0;
-		for (int i = 0; i <= m - st.length(); i++) {
-		    if (input.substring(i, i+st.length()).equals(st)) {
-		        count++;
-		    } 
+		int pattern = 0;
+		
+		for (int i = 1; i < m - 1; ) {
+		    if (input.charAt(i-1) == 'I' && input.charAt(i) == 'O' && input.charAt(i+1) == 'I') {
+		        pattern++;
+		        i += 2;
+		        // 상위 조건이 만족되는 경우 IOI를 재사용 하기 위해 pattern--
+		        if (pattern == n) {
+		            count++;
+		            pattern--;
+		        } 
+		    } else {
+		        pattern = 0;
+		        i++;
+		    }
 		} 
 		bw.write(count + "\n");
 		bw.flush();
