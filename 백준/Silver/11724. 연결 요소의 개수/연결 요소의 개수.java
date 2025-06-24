@@ -23,7 +23,7 @@ public class Main {
 	        st = new StringTokenizer(br.readLine());
 	        int u = Integer.parseInt(st.nextToken());
 	        int v = Integer.parseInt(st.nextToken());
-	        unionByRank(u, v);
+	        union(u, v);
 	    } 
 	    Set<Integer> set = new HashSet<>();
 	    for (int i = 1; i <= n; i++) {
@@ -36,17 +36,10 @@ public class Main {
 	    if (parent[x] != x) return parent[x] = find(parent[x]);
 	    return parent[x];
 	}
-	private static void unionByRank(int x, int y) {
+	private static void union(int x, int y) {
 	    int rootX = find(x);
 	    int rootY = find(y);
-	    if (rootX == rootY) return; 
-	    if (rank[rootX] < rank[rootY]) {
-	        parent[rootX] = rootY;
-	    } else if (rank[rootX] > rank[rootY]) {
-	        parent[rootY] = rootX;
-	    } else {
-	        parent[rootY] = rootX;
-	        rank[rootX]++;
-	    }
+	    if (rootX == rootY) return;
+	    parent[rootY] = rootX;
 	}
 }
