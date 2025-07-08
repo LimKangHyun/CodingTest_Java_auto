@@ -20,7 +20,7 @@ public class Main {
 		        map[i][j] = Integer.parseInt(st.nextToken());
 		    } 
 		} 
-		makeSumArr(map);
+		makeSumArr(n);
 		for (int i = 0; i < m; i++) {
 		    st = new StringTokenizer(br.readLine());
 		    int x1 = Integer.parseInt(st.nextToken());
@@ -32,9 +32,9 @@ public class Main {
 		bw.write(sb.toString());
 		bw.flush();
 	}
-	private static void makeSumArr(int[][] map) {
-	    for (int i = 1; i <= map.length - 1; i++) {
-	        for (int j = 1; j <= map.length - 1; j++) {
+	private static void makeSumArr(int n) {
+	    for (int i = 1; i <= n; i++) {
+	        for (int j = 1; j <= n; j++) {
 	            // sum[i-1][j-1]이 두 번 겹치므로 한 번 빼주기
 	            sumArr[i][j] = map[i][j] + sumArr[i-1][j] + sumArr[i][j-1] - sumArr[i-1][j-1];
 	        } 
