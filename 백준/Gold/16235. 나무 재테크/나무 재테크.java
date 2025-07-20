@@ -6,6 +6,7 @@ public class Main {
     static int[][] nutrit;
     static int[][] land;
     static Deque<Integer>[][] trees;
+    static Deque<Integer> newTrees = new ArrayDeque<>();
     static int[] dx = {-1, -1, -1, 0, 0, 1, 1, 1};
     static int[] dy = {-1, 0, 1, -1, 1, -1, 0, 1};
     
@@ -54,7 +55,8 @@ public class Main {
 	    for (int i = 1; i <= N; i++) {
 	        for (int j = 1; j <= N; j++) {
 	            if(trees[i][j].isEmpty()) continue;
-	            Deque<Integer> newTrees = new ArrayDeque<>();
+	            
+	            newTrees.clear(); // newTrees 객체 재사용
 	            int dead = 0;
 	            while(!trees[i][j].isEmpty()) {
 	                int age = trees[i][j].pollFirst();
@@ -65,7 +67,8 @@ public class Main {
 	                    dead += age / 2;
 	                }
 	            }
-	            trees[i][j] = newTrees; // 봄,여름이 지난 새로운 덱으로 교체
+	            trees[i][j].clear();
+	            trees[i][j].addAll(newTrees); // 기존 덱을 유지하고 내용물만 바꾸기
 	            land[i][j] += dead;
 	        } 
 	    } 
