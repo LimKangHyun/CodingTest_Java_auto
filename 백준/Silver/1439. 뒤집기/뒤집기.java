@@ -11,8 +11,8 @@ public class Main {
 		
 		for (int i = 0; i < input.length(); i++) {
 		    if (i == 0 || input.charAt(i - 1) != input.charAt(i)) {
-		        if (input.charAt(i) == '0') zeroCount++;
-		        else oneCount++;
+		        if (input.charAt(i) == '0') oneCount++;
+		        else zeroCount++;
 		    }
 		} 
 		bw.write(String.valueOf(Math.min(zeroCount, oneCount)));
