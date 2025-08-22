@@ -9,11 +9,8 @@ public class Main {
 		int zeroCount = 0;
 		int oneCount = 0;
 		
-		if (input.charAt(0) == '0') zeroCount++;
-		else oneCount++;
-		
-		for (int i = 1; i < input.length(); i++) {
-		    if (input.charAt(i - 1) != input.charAt(i)) {
+		for (int i = 0; i < input.length(); i++) {
+		    if (i == 0 || input.charAt(i - 1) != input.charAt(i)) {
 		        if (input.charAt(i) == '0') zeroCount++;
 		        else oneCount++;
 		    }
