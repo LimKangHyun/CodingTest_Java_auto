@@ -9,6 +9,7 @@ public class Main {
     static int[] dx = {1, -1, 0, 0};
     static int[] dy = {0, 0, -1, 1};
     static int minDist = Integer.MAX_VALUE;
+    static int zeroCount = 0;
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
@@ -24,7 +25,8 @@ public class Main {
 		    st = new StringTokenizer(br.readLine());
 		    for (int j = 0; j < N; j++) {
 		        lab[i][j] = Integer.parseInt(st.nextToken());
-		        if (lab[i][j] == 2) virus.add(new int[] {i, j, 0}); 
+		        if (lab[i][j] == 2) virus.add(new int[] {i, j, 0});
+                if (lab[i][j] == 0) zeroCount++;
 		    } 
 		} 
 		combinationVirus(0, 0);
@@ -33,12 +35,8 @@ public class Main {
 	}
 	private static void combinationVirus(int start, int depth) {
 	    if (depth == M) {
-	        int[][] labCopy = new int[N][N];
-	        for (int i = 0; i < N; i++) {
-	            labCopy[i] = lab[i].clone();
-	        } 
-	        int dist = bfs(labCopy);
-	        minDist = Math.min(minDist, dist);
+	        minDist = Math.min(minDist, bfs());
+	        return;
 	    }
 	    int size = virus.size();
 	    for (int i = start; i < size; i++) {
@@ -47,8 +45,9 @@ public class Main {
 	        selectedV.remove(selectedV.size() - 1);
 	    } 
 	}
-	private static int bfs(int[][] labCopy) {
+	private static int bfs() {
 	    int maxCount = 0;
+	    int empty = zeroCount;
 	    boolean[][] visited = new boolean[N][N];
 	    Queue<int[]> queue = new LinkedList<>();
 	    for (int[] v : selectedV) {
@@ -64,25 +63,16 @@ public class Main {
 	            int nx = x + dx[i];
 	            int ny = y + dy[i];
 	            if (nx < 0 || ny < 0 || nx >= N || ny >= N) continue;
-	            if (!visited[nx][ny] && labCopy[nx][ny] != 1) { //이제 비활성 바이러스와 빈칸만 구분
+	            if (!visited[nx][ny] && lab[nx][ny] != 1) { //이제 비활성 바이러스와 빈칸만 구분
 	                visited[nx][ny] = true;
 	                queue.offer(new int[] {nx, ny, dist + 1});
-	                if (labCopy[nx][ny] == 0) {
-	                    labCopy[nx][ny] = dist + 1;
+	                if (lab[nx][ny] == 0) {
 	                    maxCount = Math.max(maxCount, dist + 1);
+	                    empty--;
 	                }
 	            }
 	        } 
 	    }
-	    boolean isFilled = true;
-	    for (int i = 0; i < N; i++) {
-	        for (int j = 0; j < N; j++) {
-	            if (labCopy[i][j] == 0) {
-	                isFilled = false;
-	                break;
-	            }
-	        } 
-	    } 
-	    return isFilled ? maxCount : Integer.MAX_VALUE;
+	    return empty == 0 ? maxCount : Integer.MAX_VALUE;
 	}
 }
