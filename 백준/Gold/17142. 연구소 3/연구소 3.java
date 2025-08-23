@@ -51,7 +51,7 @@ public class Main {
 	    if (zeroCount == 0) return 0;
 	    int empty = zeroCount;
 	    boolean[][] visited = new boolean[N][N];
-	    ArrayDeque<int[]> deque = new ArrayDeque<>();
+        Queue<int[]> deque = new ArrayDeque<>();
 	    for (int[] v : selectedV) {
 	        deque.offer(new int[] {v[0], v[1], 0}); // 참조형이므로 하나씩 직접 꺼내주기
 	        visited[v[0]][v[1]] = true;
