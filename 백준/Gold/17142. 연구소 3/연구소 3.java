@@ -25,7 +25,7 @@ public class Main {
 		    st = new StringTokenizer(br.readLine());
 		    for (int j = 0; j < N; j++) {
 		        lab[i][j] = Integer.parseInt(st.nextToken());
-		        if (lab[i][j] == 2) virus.add(new int[] {i, j, 0});
+		        if (lab[i][j] == 2) virus.add(new int[] {i, j});
                 if (lab[i][j] == 0) zeroCount++;
 		    } 
 		} 
@@ -35,7 +35,8 @@ public class Main {
 	}
 	private static void combinationVirus(int start, int depth) {
 	    if (depth == M) {
-	        minDist = Math.min(minDist, bfs());
+	        int time = bfs();
+	        if (time != -1) minDist = Math.min(minDist, time);
 	        return;
 	    }
 	    int size = virus.size();
@@ -46,16 +47,17 @@ public class Main {
 	    } 
 	}
 	private static int bfs() {
-	    int maxCount = 0;
+	    int lastTime = 0;
+	    if (zeroCount == 0) return 0;
 	    int empty = zeroCount;
 	    boolean[][] visited = new boolean[N][N];
-	    Queue<int[]> queue = new LinkedList<>();
+	    ArrayDeque<int[]> deque = new ArrayDeque<>();
 	    for (int[] v : selectedV) {
-	        queue.offer(new int[] {v[0], v[1], v[2]}); // 참조형이므로 하나씩 직접 꺼내주기
+	        deque.offer(new int[] {v[0], v[1], 0}); // 참조형이므로 하나씩 직접 꺼내주기
 	        visited[v[0]][v[1]] = true;
 	    } 
-	    while(!queue.isEmpty()) {
-	        int[] current = queue.poll();
+	    while(!deque.isEmpty()) {
+	        int[] current = deque.poll();
 	        int x = current[0];
 	        int y = current[1];
 	        int dist = current[2];
@@ -63,16 +65,16 @@ public class Main {
 	            int nx = x + dx[i];
 	            int ny = y + dy[i];
 	            if (nx < 0 || ny < 0 || nx >= N || ny >= N) continue;
-	            if (!visited[nx][ny] && lab[nx][ny] != 1) { //이제 비활성 바이러스와 빈칸만 구분
-	                visited[nx][ny] = true;
-	                queue.offer(new int[] {nx, ny, dist + 1});
-	                if (lab[nx][ny] == 0) {
-	                    maxCount = Math.max(maxCount, dist + 1);
-	                    empty--;
-	                }
-	            }
+	            if (visited[nx][ny] || lab[nx][ny] == 1) continue; //이제 비활성 바이러스와 빈칸만 구분
+                visited[nx][ny] = true;
+                if (lab[nx][ny] == 0) {
+                    empty--;
+                    lastTime = dist + 1;
+                    if (empty == 0) return lastTime;
+                }
+                deque.offer(new int[] {nx, ny, dist + 1});
 	        } 
 	    }
-	    return empty == 0 ? maxCount : Integer.MAX_VALUE;
+	    return -1;
 	}
 }
