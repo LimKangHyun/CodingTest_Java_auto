@@ -5,51 +5,36 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
+        HashMap<Integer, Integer> visitCount = new HashMap<>();
+        
         while (true) {
             StringTokenizer st = new StringTokenizer(br.readLine());
             int N = Integer.parseInt(st.nextToken());
-            if (N == 0) break; // 입력 종료 조건
+            if (N == 0) break;
 
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
+            int x = 0, totalCount = 1;
 
-            // Floyd's Cycle Detection Algorithm
-            int slow = 0, fast = 0;
-
-            // 1. Find the meeting point inside the cycle
-            do {
-                slow = nextValue(slow, a, b, N);
-                fast = nextValue(nextValue(fast, a, b, N), a, b, N);
-            } while (slow != fast);
-
-            // 2. Find the start of the cycle
-            int cycleStart = 0;
-            slow = 0;
-            while (slow != fast) {
-                slow = nextValue(slow, a, b, N);
-                fast = nextValue(fast, a, b, N);
-                cycleStart++;
+            while (true) {
+                if (x == 0) {
+                    x = b % N;
+                } else {
+                    x = (int) (((1L * a * x % N) * x % N + b) % N);
+                }
+                //사이클이 반드시 첫 번째 사람(0번)부터 시작하는 것이 아니라, 중간에 시작될 수도 있다는 점을 고려
+                if (visitCount.containsKey(x)) {
+                    // totalCount - visitCount.get(x)가 사이클의 크기
+                    // 즉, N - (사이클)은 술은 마시지 않은 사람!!
+                    bw.write(String.valueOf(N - (totalCount - visitCount.get(x))));
+                    bw.newLine();
+                    visitCount.clear();
+                    break;
+                } else {
+                    visitCount.put(x, totalCount++);
+                }
             }
-
-            // 3. Calculate the length of the cycle
-            int cycleLength = 1;
-            fast = nextValue(slow, a, b, N);
-            while (slow != fast) {
-                fast = nextValue(fast, a, b, N);
-                cycleLength++;
-            }
-
-            // 술을 마시지 않은 사람의 수는 전체 인원 - 사이클 내부 사람 수
-            bw.write(String.valueOf(N - cycleLength));
-            bw.newLine();
         }
-
         bw.flush();
-    }
-
-    // f(x) 계산 공식
-    private static int nextValue(int x, int a, int b, int N) {
-        return (int) (((1L * a * x % N) * x % N + b) % N);
     }
 }
