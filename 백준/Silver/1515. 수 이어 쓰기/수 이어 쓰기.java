@@ -10,11 +10,13 @@ public class Main {
 		
 		int num = 1;
 		int idx = 0;
+		StringBuilder sb = new StringBuilder();
 		while(idx < input.length()) {
-		    String numStr = String.valueOf(num);
-		    for (char c : numStr.toCharArray()) {
-		        if (idx == input.length()) break; 
-		        if (c == input.charAt(idx)) idx++; 
+		    sb.setLength(0);
+		    sb.append(num);
+		    for (int i = 0; i < sb.length(); i++) {
+		        if (idx == input.length()) break;
+		        if (sb.charAt(i) == input.charAt(idx)) idx++; 
 		    } 
 		    num++;
 		}
