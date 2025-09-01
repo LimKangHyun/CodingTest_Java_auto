@@ -34,14 +34,12 @@ public class Main {
 	    queue.add(new int[] {a, 0});
 	    while(!queue.isEmpty()) {
 	        int[] cur = queue.poll();
-	        int num = cur[0];
-	        int count = cur[1];
-	        for(int i = 0; i < list.get(num).size(); i++) {
-	            int next = list.get(num).get(i);
-	            if (next == b) return count + 1; 
+	        if (cur[0] == b) return cur[1]; 
+	        for(int i = 0; i < list.get(cur[0]).size(); i++) {
+	            int next = list.get(cur[0]).get(i);
 	            if (!visit[next]) {
 	                visit[next] = true;
-	                queue.offer(new int[] {next, count + 1});
+	                queue.offer(new int[] {next, cur[1] + 1});
 	            } 
 	        }
 	    }
