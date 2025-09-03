@@ -30,7 +30,7 @@ public class Main {
 		    for (int i = 0; i < h; i++) {
 		        for (int j = 0; j < w; j++) {
 		            if (!visit[i][j] && map[i][j] == 1) {
-		                bfs(i, j);
+		                dfs(i, j);
 		                landCount++;
 		            }
 		        } 
@@ -40,22 +40,14 @@ public class Main {
 		bw.write(sb.toString());
 		bw.flush();
 	}
-	static void bfs(int cx, int cy) {
-	    Queue<int[]> queue = new ArrayDeque<>();
-	    queue.offer(new int[] {cx, cy});
+	static void dfs(int cx, int cy) {
 	    visit[cx][cy] = true;
-	    while(!queue.isEmpty()) {
-	        int[] cur = queue.poll();
-	        int x = cur[0];
-	        int y = cur[1];
-	        for (int i = 0; i < 8; i++) {
-	            int nx = dx[i] + x;
-	            int ny = dy[i] + y;
-	            if (nx < 0 || ny < 0 || nx >= h || ny >= w) continue;
-	            if (visit[nx][ny] || map[nx][ny] == 0) continue;
-	            visit[nx][ny] = true;
-                queue.offer(new int[] {nx, ny});
-	        } 
-	    }
+	    for (int i = 0; i < 8; i++) {
+	        int nx = cx + dx[i];
+	        int ny = cy + dy[i];
+	        if (nx < 0 || ny < 0 || nx >= h || ny >= w) continue;
+	        if (visit[nx][ny] || map[nx][ny] == 0) continue;
+	        dfs(nx, ny);
+	    } 
 	}
 }
