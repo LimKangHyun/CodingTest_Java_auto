@@ -7,7 +7,8 @@ public class Main {
     static int max = 0;
     static boolean[][] visit;
     static int[][] map;
-    static Queue<int[]> queue;
+    static Queue<int[]> queue = new ArrayDeque<>();
+    static Set<Integer> set = new HashSet<>();
     static int[] dx = {-1, 1, 0, 0};
     static int[] dy = {0, 0, -1, 1};
 	public static void main(String[] args) throws IOException {
@@ -17,21 +18,20 @@ public class Main {
 		
 		N = Integer.parseInt(br.readLine());
 		map = new int[N][N];
+		visit = new boolean[N][N];
 		for (int i = 0; i < N; i++) {
 		    st = new StringTokenizer(br.readLine());
 		    for (int j = 0; j < N; j++) {
 		        map[i][j] = Integer.parseInt(st.nextToken());
-		        min = Math.min(min, map[i][j] - 1);
-		        max = Math.max(max, map[i][j]);
+		        set.add(map[i][j]);
 		    } 
 		} 
 		int result = 0;
-		while(min < max) {
-		    visit = new boolean[N][N];
+		for(int num : set) {
 		    int count = 0;
 		    for (int i = 0; i < N; i++) {
     		    for (int j = 0; j < N; j++) {
-    		        if (map[i][j] <= min) visit[i][j] = true;
+    		        visit[i][j] = map[i][j] <= num;
     		    } 
     		} 
     		for (int i = 0; i < N; i++) {
@@ -43,13 +43,11 @@ public class Main {
     		    } 
     		} 
     		result = Math.max(result, count);
-    		min++;
 		}
-		bw.write(String.valueOf(result));
+		bw.write(String.valueOf(result == 0 ? 1 : result)); // 0은 불가능하므로 0인 경우는 1이 나오도록
 		bw.flush();
 	}
 	private static void bfs(int x, int y) {
-	    queue = new ArrayDeque<>();
 	    queue.offer(new int[] {x, y});
 	    while(!queue.isEmpty()) {
 	        int[] cur = queue.poll();
