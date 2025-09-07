@@ -29,10 +29,12 @@ public class Main {
 		    int zeroCount = 0;
 		    for (int i = 0; i < N; i++) {
     		    for (int j = 0; j < M; j++) {
+    		        // 미리 계산된 visit을 활용해 다음 맵 갱신
     		        if (visit[i][j] != -1) map[i][j] = Math.max(map[i][j] - visit[i][j], 0);
     		        if (map[i][j] == 0) zeroCount++; 
         	    } 
         	}
+        	// 모두 녹아버리면 year는 0으로
         	if (zeroCount == N * M) {
         	    year = 0;
         	    break;
