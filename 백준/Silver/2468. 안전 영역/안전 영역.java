@@ -3,8 +3,6 @@ import java.util.*;
 
 public class Main {
     static int N;
-    static int min = Integer.MAX_VALUE;
-    static int max = 0;
     static boolean[][] visit;
     static int[][] map;
     static Set<Integer> set = new HashSet<>();
@@ -17,7 +15,6 @@ public class Main {
 		
 		N = Integer.parseInt(br.readLine());
 		map = new int[N][N];
-		visit = new boolean[N][N];
 		for (int i = 0; i < N; i++) {
 		    st = new StringTokenizer(br.readLine());
 		    for (int j = 0; j < N; j++) {
@@ -27,9 +24,7 @@ public class Main {
 		} 
 		int result = 0;
 		for(int num : set) {
-		    for (int i = 0; i < N; i++) {
-                Arrays.fill(visit[i], false);
-		    }
+		    visit = new boolean[N][N];
 		    int count = 0;
     		for (int i = 0; i < N; i++) {
     		    for (int j = 0; j < N; j++) {
