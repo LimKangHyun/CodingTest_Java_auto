@@ -4,8 +4,8 @@ import java.util.*;
 public class Main {
     static int N, M;
     static int[][] map;
-    static int[][] temp;
-    static boolean[][] visit;
+    static int[][] visit;
+    static Queue<int[]> queue;
     static int[] dx = {-1, 1, 0, 0};
     static int[] dy = {0, 0, -1, 1};
 	public static void main(String[] args) throws IOException {
@@ -17,7 +17,7 @@ public class Main {
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 		map = new int[N][M];
-		visit = new boolean[N][M];
+		visit = new int[N][M];
 		for (int i = 0; i < N; i++) {
 		    st = new StringTokenizer(br.readLine());
 		    for (int j = 0; j < M; j++) {
@@ -25,53 +25,62 @@ public class Main {
 		    } 
 		}
 		int year = 0;
-		while(true) {
-		    int piece = 0;
-		    melting();
+		while(countIsland() == 1) {
+		    int zeroCount = 0;
 		    for (int i = 0; i < N; i++) {
     		    for (int j = 0; j < M; j++) {
-        	        if (visit[i][j] || map[i][j] == 0) continue;
-        	        dfs(i, j);
-        	        piece++;
+    		        if (visit[i][j] != -1) map[i][j] = Math.max(map[i][j] - visit[i][j], 0);
+    		        if (map[i][j] == 0) zeroCount++; 
         	    } 
         	}
-        	year++;
-        	if (piece >= 2) break; 
-        	if (piece == 0) {
+        	if (zeroCount == N * M) {
         	    year = 0;
         	    break;
-        	}
+        	} 
+        	year++;
 		}
 		bw.write(String.valueOf(year));
 		bw.flush();
 	}
-	private static void melting() {
-	    temp = new int[N][M];
-	    visit = new boolean[N][M];
+	private static int countIsland() {
+	    int count = 0;
+	    for (int i = 0; i < N; i++) {
+	        Arrays.fill(visit[i], -1);
+        }
 	    for (int i = 0; i < N; i++) {
 	        for (int j = 0; j < M; j++) {
-	            int count = 0;
-	            for (int d = 0; d < 4; d++) {
-	                int ni = i + dx[d];
-	                int nj = j + dy[d];
-	                if (ni < 0 || nj < 0 || ni >= N || nj >= M) continue;
-	                if (map[ni][nj] <= 0) count++;
-	            } 
-	            temp[i][j] = map[i][j] - count > 0 ? map[i][j] - count : 0;
+	            if (map[i][j] == 0 || visit[i][j] != -1) continue;
+	            bfs(i, j);
+	            count++;
 	        } 
 	    } 
-	    for (int i = 0; i < N; i++) {
-	        map[i] = Arrays.copyOf(temp[i], M);
-	    } 
+	    return count;
 	}
-	private static void dfs(int x, int y) {
-	    visit[x][y] = true;
+	private static void bfs(int x, int y) {
+	    queue = new ArrayDeque<>();
+	    queue.offer(new int[] {x, y});
+	    visit[x][y] = countSea(x, y);
+	    while(!queue.isEmpty()) {
+	        int[] cur = queue.poll();
+	        for (int i = 0; i < 4; i++) {
+    	        int nx = cur[0] + dx[i];
+    	        int ny = cur[1] + dy[i];
+    	        if (nx < 0 || ny < 0 || nx >= N || ny >= M) continue;
+    	        if (visit[nx][ny] != -1 || map[nx][ny] == 0) continue; 
+    	        visit[nx][ny] = countSea(nx, ny); // 다음 번 맵 변경 시 얼마나 빼야하는지 계산
+    	        queue.offer(new int[] {nx, ny});
+    	    } 
+	    }
+	}
+	private static int countSea(int x, int y) {
+	    int count = 0;
 	    for (int i = 0; i < 4; i++) {
 	        int nx = x + dx[i];
 	        int ny = y + dy[i];
 	        if (nx < 0 || ny < 0 || nx >= N || ny >= M) continue;
-	        if (visit[nx][ny] || map[nx][ny] == 0) continue; 
-	        dfs(nx, ny);
+	        if (map[nx][ny] != 0) continue;
+	        count++; 
 	    } 
+	    return count;
 	}
 }
