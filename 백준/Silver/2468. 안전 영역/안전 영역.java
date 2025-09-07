@@ -7,7 +7,6 @@ public class Main {
     static int max = 0;
     static boolean[][] visit;
     static int[][] map;
-    static Queue<int[]> queue = new ArrayDeque<>();
     static Set<Integer> set = new HashSet<>();
     static int[] dx = {-1, 1, 0, 0};
     static int[] dy = {0, 0, -1, 1};
@@ -28,17 +27,14 @@ public class Main {
 		} 
 		int result = 0;
 		for(int num : set) {
-		    int count = 0;
 		    for (int i = 0; i < N; i++) {
-    		    for (int j = 0; j < N; j++) {
-    		        visit[i][j] = map[i][j] <= num;
-    		    } 
-    		} 
+                Arrays.fill(visit[i], false);
+		    }
+		    int count = 0;
     		for (int i = 0; i < N; i++) {
     		    for (int j = 0; j < N; j++) {
-    		        if (visit[i][j]) continue;
-		            visit[i][j] = true;
-		            bfs(i, j);
+    		        if (visit[i][j] || map[i][j] <= num) continue;
+		            dfs(i, j, num);
 		            count++;
     		    } 
     		} 
@@ -47,18 +43,14 @@ public class Main {
 		bw.write(String.valueOf(result == 0 ? 1 : result)); // 0은 불가능하므로 0인 경우는 1이 나오도록
 		bw.flush();
 	}
-	private static void bfs(int x, int y) {
-	    queue.offer(new int[] {x, y});
-	    while(!queue.isEmpty()) {
-	        int[] cur = queue.poll();
-	        for (int i = 0; i < 4; i++) {
-	            int nx = cur[0] + dx[i];
-	            int ny = cur[1] + dy[i];
-	            if (nx < 0 || ny < 0 || nx >= N || ny >= N) continue;
-	            if (visit[nx][ny]) continue;
-	            visit[nx][ny] = true;
-	            queue.offer(new int[] {nx, ny});
-	        } 
-	    }
+	private static void dfs(int x, int y, int num) {
+	    visit[x][y] = true;
+	    for (int i = 0; i < 4; i++) {
+	        int nx = x + dx[i];
+	        int ny = y + dy[i];
+	        if (nx < 0 || ny < 0 || nx >= N || ny >= N) continue;
+	        if (visit[nx][ny] || map[nx][ny] <= num) continue;
+	        dfs(nx, ny, num);
+	    } 
 	}
 }
