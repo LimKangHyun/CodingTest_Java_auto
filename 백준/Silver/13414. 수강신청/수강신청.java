@@ -10,18 +10,22 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         int K = Integer.parseInt(st.nextToken());
         int L = Integer.parseInt(st.nextToken());
-
+        String[] arr = new String[L];
+        
         Map<String, Integer> map = new HashMap<>();
         for (int i = 0; i < L; i++) {
-            String student = br.readLine();
-            map.put(student, i);
+            map.put(br.readLine(), i);
         }
-        List<Map.Entry<String, Integer>> list = new ArrayList<>(map.entrySet());
-        list.sort(Map.Entry.comparingByValue());
-
-        int min = Math.min(list.size(), K);
-        for (int i = 0; i < min; i++) {
-            sb.append(list.get(i).getKey()).append("\n");
+        for (String s : map.keySet()) {
+            arr[map.get(s)] = s;
+        }
+        int idx = 0;
+        while(K > 0 && idx < L) {
+            if (arr[idx] != null) { // map의 크기가 K보다 작은 경우가 존재하므로
+                sb.append(arr[idx] + "\n");
+                K--;
+            } 
+            idx++;
         }
         bw.write(sb.toString());
         bw.flush();
