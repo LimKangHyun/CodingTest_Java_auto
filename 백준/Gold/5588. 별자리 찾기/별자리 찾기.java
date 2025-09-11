@@ -2,8 +2,6 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int diffX, diffY;
-    static Map<Integer, Integer> copyMap;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
@@ -11,42 +9,45 @@ public class Main {
         
         int m = Integer.parseInt(br.readLine());
         int[][] arr = new int[m][2];
-        Map<Integer, Integer> answer = new HashMap<>();
+        int[][] diff = new int[m][2];
         for (int i = 0; i < m; i++) {
             st = new StringTokenizer(br.readLine());
             int x = Integer.parseInt(st.nextToken());
             int y = Integer.parseInt(st.nextToken());
             arr[i][0] = x;
             arr[i][1] = y;
+            if (i > 0) {
+                diff[i][0] = arr[i][0] - arr[0][0];
+                diff[i][1] = arr[i][1] - arr[0][1];
+            } 
         } 
         int n = Integer.parseInt(br.readLine());
-        Map<Integer, Integer> map = new HashMap<>();
+        Set<String> set = new HashSet<>();
         for (int i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine());
-            map.put(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+            int x = Integer.parseInt(st.nextToken());
+            int y = Integer.parseInt(st.nextToken());
+            set.add(x + "," + y);
         } 
-        int[][] diff = new int[n][2];
-        // 정답 중 하나를 골라서 모든 map의 점과의 x, y 차이 계산하기
-        int cx = arr[0][0];
-        int cy = arr[0][1];
-        int idx = 0;
-        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            int key = entry.getKey();
-            int value = entry.getValue();
-            diff[idx][0] = cx - key;
-            diff[idx][1] = cy - value;
-            idx++;
-        }
-        for (int i = 0; i < n; i++) {
-            copyMap = new HashMap<>(map);
-            diffX = diff[i][0];
-            diffY = diff[i][1];
-            for (int j = 0; j < m; j++) {
-                copyMap.put(arr[j][0] - diffX, arr[j][1] - diffY);
+        for (String coordinate : set) {
+            String[] star = coordinate.split(",");
+            int x = Integer.parseInt(star[0]);
+            int y = Integer.parseInt(star[1]);
+            
+            boolean found = true;
+            for (int i = 1; i < m; i++) {
+                int targetX = x + diff[i][0];
+                int targetY = y + diff[i][1];
+                if (!set.contains(targetX + "," + targetY)) {
+                    found = false;
+                    break;
+                }
             } 
-            if (map.size() == copyMap.size()) break;
+            if (found) { // found가 true인 경우, 해당 star가 arr[0][0]과 arr[0][1]과 대응되므로
+                bw.write((x - arr[0][0]) + " " + (y - arr[0][1]));
+                break;
+            } 
         } 
-        bw.write(-diffX + " " + (-diffY));
         bw.flush();
     }
 }
