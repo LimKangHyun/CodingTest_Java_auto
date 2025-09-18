@@ -2,10 +2,9 @@ import java.io.*;
 import java.util.*;
 
 public class Main { 
-    private static List<List<Integer>> tree;
-    private static Queue<int[]> queue;
-    private static boolean[] visit;
     private static int n;
+    private static int[] parent;
+    private static boolean[] hasCycle;
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
@@ -19,21 +18,23 @@ public class Main {
 		    int m = Integer.parseInt(st.nextToken());
 		    if (n == 0) break;
 		    
-		    tree = new ArrayList<>();
-		    visit = new boolean[n + 1];
-		    for (int i = 0; i <= n; i++) {
-		        tree.add(new ArrayList<>());
+		    parent = new int[n + 1];
+		    hasCycle = new boolean[n + 1];
+		    for (int i = 1; i <= n; i++) {
+		        parent[i] = i;
 		    } 
 		    while(m-- > 0) {
-		        st = new StringTokenizer(br.readLine());
-		        int a = Integer.parseInt(st.nextToken());
-		        int b = Integer.parseInt(st.nextToken());
-		        tree.get(a).add(b);
-		        tree.get(b).add(a);
+                st = new StringTokenizer(br.readLine());
+                int a = Integer.parseInt(st.nextToken());
+                int b = Integer.parseInt(st.nextToken());
+    		    if (union(a, b)) {
+    		        hasCycle[find(a)] = true;
+    		    }
 		    }
 		    int count = 0;
 		    for (int i = 1; i <= n; i++) {
-		        if (!visit[i] && bfs(i)) count++;
+		        int root = find(i);
+		        if (root == i && !hasCycle[i]) count++;
 		    } 
 		    sb.append("Case ").append(idx++).append(": ");
 		    if (count == 0) sb.append("No trees.").append("\n");
@@ -43,24 +44,16 @@ public class Main {
 		bw.write(sb.toString());
 		bw.flush();
 	}
-	private static boolean bfs(int start) {
-	    queue = new ArrayDeque<>();
-	    visit[start] = true;
-	    queue.offer(new int[] {start, 0});
-	    boolean isTree = true;
-	    while(!queue.isEmpty()) {
-	        int[] cur = queue.poll();
-	        int node = cur[0];
-	        int parent = cur[1];
-	        for (int next : tree.get(node)) {
-	            if (!visit[next]) {
-	                visit[next] = true;
-	                queue.offer(new int[] {next, node});
-	            } else if (next != parent) {
-	                isTree = false;
-	            }
-	        } 
-	    }
-	    return isTree;
+	private static int find(int x) {
+	    if (parent[x] == x) return x;
+	    return parent[x] = find(parent[x]);
+	}
+	private static boolean union(int a, int b) {
+	    int rootA = find(a);
+	    int rootB = find(b);
+	    if (rootA == rootB) return true;
+	    parent[rootB] = rootA;
+	    hasCycle[rootA] = hasCycle[rootA] || hasCycle[rootB];
+	    return false;
 	}
 }
