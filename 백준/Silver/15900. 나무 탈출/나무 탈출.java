@@ -23,19 +23,24 @@ public class Main {
 		    tree[a].add(b);
 		    tree[b].add(a);
 		}
-		dfs(1, 0);
-		bw.write((sum & 1) == 1 ? "Yes" : "No"); 
+		bfs();
+		bw.write((sum % 2) == 1 ? "Yes" : "No"); 
 		bw.flush();
 	}
-	private static void dfs(int node, int depth) {
-	    visit[node] = true;
-	    boolean isLeaf = true;
-	    for (int next : tree[node]) {
-	        if (visit[next]) continue;
-	        isLeaf = false;
-	        dfs(next, depth + 1);
+	private static void bfs() {
+	    visit[1] = true;
+	    Queue<int[]> queue = new ArrayDeque<>();
+	    queue.offer(new int[] {1, 0});
+	    while(!queue.isEmpty()) {
+	        boolean isLeaf = true;
+	        int[] cur = queue.poll();
+	        for (int next : tree[cur[0]]) {
+	            if (visit[next]) continue;
+	            visit[next] = true;
+	            isLeaf = false;
+	            queue.offer(new int[] {next, cur[1] + 1});
+	        }
+	        if (isLeaf) sum += cur[1];
 	    } 
-	    if (!isLeaf) return;
-	    sum += depth;
 	}
 }
