@@ -57,14 +57,17 @@ public class Main {
 	                int nx = i + dx[d];
 	                int ny = j + dy[d];
 	                if (nx < 0 || ny < 0 || nx >= N || ny >= N) continue;
-	                if (checkStud(stud, nx, ny) == 1) count++;
+	                count += checkStud(stud, nx, ny);
 	                if (room[nx][ny] == 0) blank++;
 	            }
-	            if (max[0] < count || 
-	            (max[0] == count && max[1] < blank) || 
-	            (max[0] == count && max[1] == blank && max[2] > i) || 
-	            (max[0] == count && max[1] == blank && max[2] == i && max[3] > j)) {
+	            if (max[0] < count) {
 	                max[0] = count;
+	                max[1] = blank;
+	                max[2] = i;
+	                max[3] = j;
+	            }
+	            else if (max[0] == count) {
+	                if (blank <= max[1]) continue;
 	                max[1] = blank;
 	                max[2] = i;
 	                max[3] = j;
