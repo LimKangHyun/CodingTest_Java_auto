@@ -26,8 +26,8 @@ public class Main {
 		}
 		int lastCheese = 0;
 		while(total > 0) {
+            lastCheese = total;
 		    markOutside();
-		    lastCheese = total;
 		    melt();
 		    time++;
 		}
