@@ -1,54 +1,54 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
-    private static List<int[]>[] list;
-    private static boolean[] visited;
-    private static int count = 0;
-	public static void main(String[] args) throws IOException {
+    static int N;
+    static int Q;
+    static int K;
+    static List<int[]>[] graph;
+    static boolean[] visited;
+    static int cnt = 0;
+    private static void dfs(int cur, int minWeight) {
+        visited[cur] = true;
+        for(int i=0;i<graph[cur].size();i++){
+            int[] node = graph[cur].get(i);
+            if(visited[node[0]]) continue;
+            int next = node[0];
+            int weight = node[1];
+            if(Math.min(weight, minWeight) >= K) cnt++;
+            if(Math.min(weight, minWeight) < K) continue;
+            dfs(next, Math.min(weight, minWeight));
+        }
+    }
+	public static void main(String[] args) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		StringTokenizer st;
 		StringBuilder sb = new StringBuilder();
-		
-		st = new StringTokenizer(br.readLine());
-		int N = Integer.parseInt(st.nextToken());
-		int Q = Integer.parseInt(st.nextToken());
-		
-		list = new ArrayList[N + 1];
-		for (int i = 0; i <= N; i++) {
-		    list[i] = new ArrayList<>();
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(st.nextToken());
+		Q = Integer.parseInt(st.nextToken());
+		graph = new ArrayList[N+1];
+		for(int i=1;i<=N;i++){
+		    graph[i] = new ArrayList<>();
 		}
-		for (int i = 0; i < N - 1; i++) {
+		for(int i=0;i<N-1;i++){
 		    st = new StringTokenizer(br.readLine());
-		    int a = Integer.parseInt(st.nextToken());
-		    int b = Integer.parseInt(st.nextToken());
+		    int n1 = Integer.parseInt(st.nextToken());
+		    int n2 = Integer.parseInt(st.nextToken());
 		    int weight = Integer.parseInt(st.nextToken());
-		    list[a].add(new int[] {b, weight});
-		    list[b].add(new int[] {a, weight});
+		    graph[n1].add(new int[]{n2, weight});
+		    graph[n2].add(new int[]{n1, weight});
 		}
-		
-		for (int i = 0; i < Q; i++) {
+		while(Q-->0) {
+		    cnt=0;
+		    visited = new boolean[N+1];
 		    st = new StringTokenizer(br.readLine());
-		    int K = Integer.parseInt(st.nextToken());
-		    int v = Integer.parseInt(st.nextToken());
-		    visited = new boolean[N + 1];
-		    count = 0;
-		    visited[v] = true;
-		    dfs(K, v);
-		    sb.append(count).append("\n");
+		    K = Integer.parseInt(st.nextToken());
+		    int start = Integer.parseInt(st.nextToken());
+		    dfs(start, Integer.MAX_VALUE);
+		    sb.append(cnt+"\n");
 		}
 		bw.write(sb.toString());
 		bw.flush();
-	}
-	private static void dfs(int minUsado, int node) {
-	    for (int[] next : list[node]) {
-	        int weight = next[1];
-	        if (!visited[next[0]] && weight >= minUsado) {
-	            visited[next[0]] = true;
-	            count++;
-	            dfs(minUsado, next[0]);
-	        }
-	    }
 	}
 }
