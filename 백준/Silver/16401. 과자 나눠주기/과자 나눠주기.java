@@ -12,13 +12,14 @@ public class Main {
 		
 		int[] snack = new int[N];
 		st = new StringTokenizer(br.readLine());
+		int maxLen = 0;
 		for (int i = 0; i < N; i++) {
 		    snack[i] = Integer.parseInt(st.nextToken());
+		    maxLen = Math.max(maxLen, snack[i]);
 		}
-		Arrays.sort(snack);
 		int max = 0;
 		int left = 1;
-		int right = snack[N - 1];
+		int right = maxLen;
 		while (left <= right) {
 		    int mid = (left + right) / 2;
 		    int count =  0;
