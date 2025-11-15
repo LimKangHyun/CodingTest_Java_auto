@@ -5,7 +5,6 @@ public class Main {
     static int L, C;
     static char[] spell;
     static char[] temp;
-    static boolean[] visited;
     static StringBuilder sb = new StringBuilder();
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -17,7 +16,6 @@ public class Main {
 		C = Integer.parseInt(st.nextToken());
 		spell = new char[C];
 		temp = new char[L];
-		visited = new boolean[C];
 		st = new StringTokenizer(br.readLine());
 		for (int i = 0; i < C; i++) {
 		    spell[i] = st.nextToken().charAt(0);
@@ -38,14 +36,10 @@ public class Main {
 	        return;
 	    }
 	    for (int i = start; i < C; i++) {
-	        if (!visited[i]) {
-	            temp[depth] = spell[i];
-	            visited[i] = true;
-	            if (isVowel(spell[i])) {
-    	            comb(depth + 1, i + 1, vowelCount + 1, consonantCount);
-    	        } else comb(depth + 1, i + 1, vowelCount, consonantCount + 1);
-    	        visited[i] = false;
-	        }
+	        temp[depth] = spell[i];
+            if (isVowel(spell[i])) {
+	            comb(depth + 1, i + 1, vowelCount + 1, consonantCount);
+	        } else comb(depth + 1, i + 1, vowelCount, consonantCount + 1);
 	    }
 	}
 	private static boolean isVowel(char c) {
