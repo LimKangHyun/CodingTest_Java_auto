@@ -29,6 +29,7 @@ public class Main {
 		queue.offer(X);
 		while(!queue.isEmpty()) {
 		    int cur = queue.poll();
+		    if (dist[cur] > K) continue;
 		    for (int next : list[cur]) {
 		        if (next != X && dist[next] == 0) {
 		            dist[next] = dist[cur] + 1;
