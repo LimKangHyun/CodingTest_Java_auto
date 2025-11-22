@@ -37,19 +37,12 @@ public class Main {
 		    st = new StringTokenizer(br.readLine());
 		    int a = Integer.parseInt(st.nextToken());
 		    int b = Integer.parseInt(st.nextToken());
-		    int dis = lca(a, b);
-		    int answer = dist[a] + dist[b] - 2 * dist[dis]; // 두 노드 사이의 거리 구하기
+		    int lca = findLca(a, b);
+		    int answer = dist[a] + dist[b] - 2 * dist[lca]; // 두 노드 사이의 거리 구하기
 		    sb.append(answer).append('\n');
 		}
 	    bw.write(sb.toString());
 		bw.flush();
-	}
-	private static void buildParent() {
-	    for (int k = 1; k <= LOG; k++) {
-	        for (int i = 1; i <= N; i++) {
-	            parent[k][i] = parent[k - 1][parent[k - 1][i]];
-	        }
-	    }
 	}
 	private static void dfs(int node, int par) {
 	    parent[0][node] = par; // 1은 루트이므로 부모가 없다. 따라서 0을 삽입
@@ -62,7 +55,14 @@ public class Main {
 	        dfs(v, node);
 	    }
 	}
-	private static int lca(int a, int b) {
+	private static void buildParent() {
+	    for (int k = 1; k <= LOG; k++) {
+	        for (int i = 1; i <= N; i++) {
+	            parent[k][i] = parent[k - 1][parent[k - 1][i]];
+	        }
+	    }
+	}
+	private static int findLca(int a, int b) {
 	    if (depth[a] < depth[b]) { // a를 깊게
 	        int temp = a;
 	        a = b;
