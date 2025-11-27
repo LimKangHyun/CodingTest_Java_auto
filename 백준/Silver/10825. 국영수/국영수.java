@@ -29,18 +29,17 @@ public class Main {
 		StringTokenizer st;
 		
 		int N = Integer.parseInt(br.readLine());
-		Stud[] studs = new Stud[N];
+        PriorityQueue<Stud> pq = new PriorityQueue<>();
 		for (int i = 0; i < N; i++) {
 		    st = new StringTokenizer(br.readLine());
 		    String name = st.nextToken();
 		    int kuk = Integer.parseInt(st.nextToken());
 		    int young = Integer.parseInt(st.nextToken());
 		    int su = Integer.parseInt(st.nextToken());
-		    studs[i] = new Stud(name, kuk, young, su);
+		    pq.add(new Stud(name, kuk, young, su));
 		}
-		Arrays.sort(studs);
-		for (Stud s : studs) {
-		    sb.append(s.name).append("\n");
+		while(!pq.isEmpty()) {
+		    sb.append(pq.poll().name).append("\n");
 		}
 		bw.write(sb.toString());
 		bw.flush();
