@@ -1,36 +1,40 @@
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
+import java.io.*;
+import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        //입력
-        Scanner sc = new Scanner(System.in);
-        int num = sc.nextInt();
-        int[][] student_classes = new int[num][5];
-        for(int i = 0; i < num; i++){
-            for(int j = 0; j <5 ; j++){
-                student_classes[i][j] = sc.nextInt();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int N = Integer.parseInt(st.nextToken());
+        int input[][] = new int[N][5];
+
+        for (int i = 0; i< N; i++){
+            st = new StringTokenizer(br.readLine());
+            for (int j = 0; j< 5; j++){
+                input[i][j] = Integer.parseInt(st.nextToken());
             }
         }
+
         int max = 0;
-        int leader = 0;
-        for(int i = 0; i<num; i++){
-            Set<Integer> set = new HashSet<>();
-            for(int j = 0; j<5; j++){
-                for(int k = 0; k<num; k++){
-                    if(student_classes[i][j] == student_classes[k][j]
-                            && i!=k){
-                        set.add(k);
+        int student_num = 0;
+
+        for (int i = 0; i < N; i++) {
+            int cnt = 0;
+            for (int j = 0; j< N; j++) {
+                if (i==j) continue;
+                for (int k = 0; k < 5; k++) {
+                    if (input[i][k] == input[j][k]) {
+                        cnt++;
+                        break;
                     }
                 }
             }
-            if(set.size()>max) {
-                leader = i;
-                max = set.size();
+            if (max < cnt){
+                max = cnt;
+                student_num = i;
             }
         }
-        System.out.println(leader + 1);
+        System.out.println(student_num+1);
     }
 }
