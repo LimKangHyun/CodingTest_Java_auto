@@ -33,7 +33,9 @@ public class Main {
 		bw.flush();
 	}
 	private static void dijkstra(int start) {
-	    PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[1])); // weight가 큰 순서
+        // weight가 큰 순서
+        // 오버플로우 방지 : PriorityQueue<int[]> q = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+	    PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[1]));
 	    dist[1] = 0;
 	    pq.offer(new int[] {1, 0});
 	    
@@ -42,6 +44,7 @@ public class Main {
 	        int curNode = cur[0];
 	        int curWeight = cur[1];
 	        if (dist[curNode] < curWeight) continue; // 더 짧은 경로가 있다면 스킵
+	        if (curNode == N) return;
 	        for (int[] edge : graph[curNode]) {
 	            int nextNode = edge[0];
 	            int weight = edge[1];
