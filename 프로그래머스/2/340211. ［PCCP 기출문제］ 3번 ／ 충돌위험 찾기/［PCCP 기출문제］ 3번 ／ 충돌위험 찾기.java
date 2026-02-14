@@ -46,8 +46,8 @@ class Solution {
     private static void findCollision() {
         int escapeBots = 0;
         while(escapeBots != size) {
-            escapeBots = 0;
-            int[][] map = new int[101][101];
+            escapeBots = 0; // 매 초마다 탈출로봇개수 초기화(모두 나가는 시간 측정)
+            int[][] map = new int[101][101]; // 매 초마다 맵 초기화(겹치는 좌표 측정)
             for (int i = 0; i < size; i++) {
                 if (record[i].isEmpty()) {
                     escapeBots++;
