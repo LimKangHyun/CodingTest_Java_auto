@@ -7,7 +7,8 @@ class Solution {
         long[] spells = changeBans(bans);
         Arrays.sort(spells);
         for (long spell : spells) {
-            if (spell <= n) n++;
+            if (spell > n) break;
+            n++;
         }
         while(n > 0) {
             sb.append((char) ('a' + (--n % 26)));
