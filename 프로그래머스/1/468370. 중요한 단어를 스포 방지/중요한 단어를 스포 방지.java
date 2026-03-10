@@ -6,8 +6,8 @@ class Solution {
         Set<String> not_important = new HashSet<>();
         int start = 0;
         int end = 0;
-        for (int i = 0; i < message.length(); i++) {
-            if (message.charAt(i) == ' ') {
+        for (int i = 0; i <= message.length(); i++) {
+            if (i == message.length() || message.charAt(i) == ' ') {
                 end = i - 1;
                 if (!isHidden(start, end, spoiler_ranges)) {
                     String word = message.substring(start, end + 1);
@@ -15,10 +15,6 @@ class Solution {
                 }
                 start = i + 1;
             }
-        }
-        if (!isHidden(start, message.length() - 1, spoiler_ranges)) {
-            String word = message.substring(start);
-            not_important.add(word);
         }
         String[] words = message.split(" ");
         for (String word : words) {
