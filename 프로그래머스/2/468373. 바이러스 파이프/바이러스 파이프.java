@@ -55,16 +55,16 @@ class Solution {
     private void infect(int type, Set<Integer> infected) {
         Queue<Integer> queue = new ArrayDeque<>();
         boolean[] visited = new boolean[n + 1];
-        visited[infection] = true;
         for (int node : infected) {
             queue.offer(node);
+            visited[node] = true;
         }
         while(!queue.isEmpty()) {
             int cur = queue.poll();
             for (Pipe next : tree.get(cur)) {
                 if (visited[next.to] || next.type != type) continue;
-                queue.offer(next.to);
-                infected.add(next.to);
+                queue.offer(next.to); // 현재 단계 전파 확인용
+                infected.add(next.to); // 최종 결과물
                 visited[next.to] = true;
             }
         }
