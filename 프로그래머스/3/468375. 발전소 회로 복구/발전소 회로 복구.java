@@ -86,7 +86,6 @@ class Solution {
     private void makeDist() {
         int n = panels.length;
         dist = new int[n + 1][n + 1];
-        distToElev = new int[n + 1];
         for (int i = 0; i < n; i++) {
             bfs(i + 1);
         }
