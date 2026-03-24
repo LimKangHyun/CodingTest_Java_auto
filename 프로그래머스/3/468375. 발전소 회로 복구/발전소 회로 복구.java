@@ -44,7 +44,7 @@ class Solution {
         }
         dp[0][0] = 0;
         
-        for (int mask = 0; mask < (1 << n); mask++) {
+        for (int mask = 0; mask < (1 << n); mask++) { // 패널을 켤 수 있는 모든 경우의 수
             for (int last = 0; last <= n; last++) {
                 if (dp[mask][last] == Integer.MAX_VALUE) continue;
                 
@@ -53,11 +53,11 @@ class Solution {
                     if ((mask & prev[next]) != prev[next]) continue; // 선행 조건 미충족
                     
                     int cost;
-                    if (last == 0) {
-                        if (panels[0][0] == panels[next - 1][0]) {
+                    if (last == 0) { // 아직 아무 패널도 켜지지 않은 상태 -> 1번 패널 시작
+                        if (panels[0][0] == panels[next - 1][0]) { // 같은 층
                             if (dist[1][next] == Integer.MAX_VALUE) continue;
                             cost = dist[1][next];
-                        } else {
+                        } else { // 다른 층
                             if (dist[1][0] == Integer.MAX_VALUE || dist[0][next] == Integer.MAX_VALUE) continue;
                             cost = dist[1][0] + Math.abs(panels[0][0] - panels[next - 1][0]) + dist[0][next];
                         }
@@ -70,7 +70,7 @@ class Solution {
                             cost = dist[last][0] + Math.abs(panels[last - 1][0] - panels[next - 1][0]) + dist[0][next];
                         }
                     }
-                    int newMask = mask | (1 << (next - 1));
+                    int newMask = mask | (1 << (next - 1)); // 켜진 패널 확인
                     dp[newMask][next] = Math.min(dp[newMask][next], dp[mask][last] + cost);
                 }
             }
@@ -78,14 +78,14 @@ class Solution {
 
         int answer = Integer.MAX_VALUE;
         int fullMask = (1 << n) - 1;
-        for (int last = 1; last <= n; last++) {
+        for (int last = 1; last <= n; last++) { // last번을 마지막으로 켠 경우
             answer = Math.min(answer, dp[fullMask][last]);
         }
         return answer;
     }
     private void makeDist() {
         int n = panels.length;
-        dist = new int[n + 1][n + 1];
+        dist = new int[n + 1][n + 1]; // dist[0]은 엘리베이터까지의 거리
         for (int i = 0; i < n; i++) {
             bfs(i + 1);
         }
