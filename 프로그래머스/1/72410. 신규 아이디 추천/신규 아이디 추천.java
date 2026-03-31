@@ -8,10 +8,6 @@ class Solution {
                 sb.append(c);
             }
         }
-        for (int i = 1; i < sb.length(); ) {
-            if (sb.charAt(i) == '.' && sb.charAt(i - 1) == '.') sb.deleteCharAt(i);
-            else i++;
-        }
         if (sb.length() > 0 && sb.charAt(0) == '.') sb.deleteCharAt(0);
         if (sb.length() > 0 && sb.charAt(sb.length() - 1) == '.') sb.deleteCharAt(sb.length() - 1);
         if (sb.length() == 0) sb.append('a');
