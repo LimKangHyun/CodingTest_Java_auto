@@ -2,36 +2,33 @@ import java.util.*;
 
 class Solution {
     public int solution(String dartResult) {
-        List<Integer> list = new ArrayList<>();
-        int answer = 0;
-        char prev = '0';
-        int idx = 0;
+        int[] scores = new int[3];
+        int idx = -1;
         for (int i = 0; i < dartResult.length(); i++) {
             char c = dartResult.charAt(i);
-            if (c == '*') {
-                if (list.size() > 1) {
-                    list.set(list.size() - 2, list.get(list.size() - 2) * 2);
-                }
-                list.set(list.size() - 1, list.get(list.size() - 1) * 2);
-            } else if (c == '#') {
-                list.set(list.size() - 1, list.get(list.size() - 1) * -1);
-            } else if (c >= '0' && c <= '9') {
-                if (prev == '1' && c == '0') {
-                    list.remove(list.size() - 1);
-                    list.add(10);
+
+            if (Character.isDigit(c)) {
+                if (c == '0' && i > 0 && dartResult.charAt(i - 1) == '1') {
+                    scores[idx] = 10; 
                 } else {
-                    list.add(c - '0');
+                    idx++;
+                    scores[idx] = c - '0';
                 }
-                prev = c;
+
+            } else if (c == 'S') {
+                scores[idx] = (int) Math.pow(scores[idx], 1);
             } else if (c == 'D') {
-                list.set(list.size() - 1, (int) Math.pow(list.get(list.size() - 1), 2));
+                scores[idx] = (int) Math.pow(scores[idx], 2);
             } else if (c == 'T') {
-                list.set(list.size() - 1, (int) Math.pow(list.get(list.size() - 1), 3));
+                scores[idx] = (int) Math.pow(scores[idx], 3);
+            } else if (c == '*') {
+                scores[idx] *= 2;
+                if (idx > 0) scores[idx - 1] *= 2;
+            } else if (c == '#') {
+                scores[idx] *= -1;
             }
         }
-        for (int n : list) {
-            answer += n;
-        }
-        return answer;
+
+        return scores[0] + scores[1] + scores[2];
     }
 }
