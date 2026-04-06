@@ -1,42 +1,40 @@
 import java.util.*;
 
 class Solution {
-    private static List<List<Integer>> list = new ArrayList<>();
-    private static boolean[] visit;
     public int solution(int n, int[][] edge) {
-        for(int i = 0; i <= n; i++) {
-            list.add(new ArrayList<>());
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i <= n; i++) {
+            graph.add(new ArrayList<>());
         }
-        visit = new boolean[n + 1];
-        for(int i = 0; i < edge.length; i++) {
-            list.get(edge[i][0]).add(edge[i][1]);
-            list.get(edge[i][1]).add(edge[i][0]);
+        for (int i = 0; i < edge.length; i++) {
+            int u = edge[i][0];
+            int v = edge[i][1];
+            graph.get(u).add(v);
+            graph.get(v).add(u);
         }
-        return bfs(n);
-    }
-    private static int bfs(int n) {
-        int answer = 0;
-        Queue<int[]> queue = new LinkedList<>();
-        queue.offer(new int[] {1, 0});
-        visit[1] = true;
-        int maxDist = 0;
+        
+        int[] dist = new int[n + 1];
+        Arrays.fill(dist, -1);
+        
+        Queue<Integer> queue = new ArrayDeque<>();
+        queue.offer(1);
+        dist[1] = 0;
         while(!queue.isEmpty()) {
-            int[] cur = queue.poll();
-            int num = cur[0];
-            int dist = cur[1];
-            if (dist == maxDist) answer++;
-            if (dist > maxDist) {
-                maxDist = dist;
-                answer = 1;
-            }
-            for (int i = 0; i < list.get(num).size(); i++) {
-                int neighbor = list.get(num).get(i);
-                if(!visit[neighbor]) {
-                    queue.add(new int[] {neighbor, dist+1});
-                    visit[neighbor] = true;
-                }
+            int cur = queue.poll();
+            for (int next : graph.get(cur)) {
+                if (dist[next] != -1) continue;
+                dist[next] = dist[cur] + 1;
+                queue.offer(next);
             }
         }
-        return answer;
+        int max = 0;
+        int maxCount = 0;
+        for (int d : dist) {
+            if (d > max) {
+                max = d;
+                maxCount = 1;
+            } else if (d == max) maxCount++;
+        }
+        return maxCount;
     }
 }
