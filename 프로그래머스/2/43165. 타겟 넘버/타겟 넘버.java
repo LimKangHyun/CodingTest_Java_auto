@@ -1,17 +1,15 @@
 class Solution {
-    private static int answer = 0;
+    int count = 0;
     public int solution(int[] numbers, int target) {
-        dfs(numbers, 0, target, 0);
-        return answer;
+        dfs(numbers, 0, 0, target);
+        return count;
     }
-    private static void dfs(int[] numbers, int depth, int target, int calc) {
+    public void dfs(int[] numbers, int depth, int calc, int target) {
         if (depth == numbers.length) {
-            if(calc == target) {
-                answer++;
-            }
+            if (calc == target) count++;
             return;
         }
-        dfs(numbers, depth+1, target, calc + numbers[depth]);
-        dfs(numbers, depth+1, target, calc - numbers[depth]);
+        dfs(numbers, depth + 1, calc - numbers[depth], target);
+        dfs(numbers, depth + 1, calc + numbers[depth], target);
     }
 }
