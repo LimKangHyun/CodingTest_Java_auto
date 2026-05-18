@@ -1,41 +1,33 @@
 import java.util.*;
 
 class Solution {
-    private static final int[] dx = {0, 0, -1, 1};
-    private static final int[] dy = {1, -1, 0, 0};
-    private static boolean[][] visit;
-    private static int[][] dist;
+    int[] dx = {-1, 1, 0, 0};
+    int[] dy = {0, 0, -1, 1};
     public int solution(int[][] maps) {
-        int answer = 0;
-        int n = maps.length;
-        int m = maps[0].length;
-        
-        visit = new boolean[n][m];
-        dist = new int[n][m];
-        bfs(maps, n, m);
-        answer = dist[n-1][m-1];
-        return answer == 0 ? -1 : answer;
-    }
-    
-    private static void bfs(int[][] maps, int n, int m) {
-        visit[0][0] = true;
-        dist[0][0] = 1;
-        Queue<int[]> queue = new LinkedList<>();
-        queue.offer(new int[] {0, 0});
-        
+        int row = maps.length;
+        int col = maps[0].length;
+        boolean[][] visited = new boolean[row][col];
+        visited[0][0] = true;
+        Queue<int[]> queue = new ArrayDeque<>();
+        queue.offer(new int[] {0, 0, 1});
         while(!queue.isEmpty()) {
-            int current[] = queue.poll();
-            for(int i = 0; i < 4; i++) {
-                int nx = current[0] + dx[i];
-                int ny = current[1] + dy[i];
-                if(nx >= 0 && ny >= 0 && nx < n && ny < m) {
-                    if(!visit[nx][ny] && maps[nx][ny] == 1) {
-                        visit[nx][ny] = true;
-                        dist[nx][ny] = dist[current[0]][current[1]] + 1;
-                        queue.offer(new int[] {nx, ny});
-                    }
+            int[] cur = queue.poll();
+            int x = cur[0];
+            int y = cur[1];
+            int dis = cur[2];
+            if (x == row - 1 && y == col - 1) {
+                return dis;
+            }
+            for (int i = 0; i < 4; i++) {
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+                if (nx < 0 || ny < 0 || nx >= row || ny >= col) continue;
+                if (maps[nx][ny] == 1 && !visited[nx][ny]) {
+                    visited[nx][ny] = true;
+                    queue.offer(new int[] {nx, ny, dis + 1});
                 }
             }
         }
+        return -1;
     }
 }
