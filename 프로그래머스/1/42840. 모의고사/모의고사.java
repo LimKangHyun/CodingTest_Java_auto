@@ -1,33 +1,26 @@
 import java.util.*;
 
 class Solution {
+    int[] first = {1,2,3,4,5};
+    int[] second = {2,1,2,3,2,4,2,5};
+    int[] third = {3,3,1,1,2,2,4,4,5,5};
+    int max = 0;
     public int[] solution(int[] answers) {
-        int[] cnt = new int[4];
-        List<Integer> answer = new ArrayList<>();
-        
-        int[] a = {1, 2, 3, 4, 5};
-        int[] b = {2, 1, 2, 3, 2, 4, 2, 5};
-        int[] c = {3, 3, 1, 1, 2, 2, 4, 4, 5, 5};
-        
+        int firstCnt = 0;
+        int secondCnt = 0;
+        int thirdCnt = 0;
         for (int i = 0; i < answers.length; i++) {
-            if (answers[i] == a[i % 5]) {
-                cnt[1] += 1;
-            }
-            if (answers[i] == b[i % 8]) {
-                cnt[2] += 1;
-            }
-            if (answers[i] == c[i % 10]) {
-                cnt[3] += 1;
-            }
+            int num = answers[i];
+            if (num == first[i % 5]) firstCnt++;
+            if (num == second[i % 8]) secondCnt++;
+            if (num == third[i % 10]) thirdCnt++;
         }
-        int max = Math.max(cnt[1], Math.max(cnt[2], cnt[3]));
+        max = Math.max(firstCnt, Math.max(secondCnt, thirdCnt));
         
-        for(int i = 1; i <= 3; i++) {
-            if (cnt[i] == max) {
-                answer.add(i);
-            }
-        }
-        
-        return answer.stream().mapToInt(i -> i).toArray();
+        List<Integer> list = new ArrayList<>();
+        if (max == firstCnt) list.add(1);
+        if (max == secondCnt) list.add(2);
+        if (max == thirdCnt) list.add(3);
+        return list.stream().mapToInt(Integer::intValue).toArray();
     }
 }
